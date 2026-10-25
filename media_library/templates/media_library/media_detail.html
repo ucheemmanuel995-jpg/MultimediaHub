@@ -1,0 +1,116 @@
+{% extends "media_library/base.html" %}
+{% block title %}{{ item.title }}{% endblock %}
+{% block meta_description %}{{ item.description|default:item.title|truncatechars:150 }}{% endblock %}
+{% block content %}
+<article class="container detail">
+  <p class="back-link"><a href="{{ back_url }}">&larr; Back to {{ item.get_media_type_display|lower }} library</a></p>
+
+  <div class="detail-grid">
+    <div class="detail-main">
+      <div class="player player-{{ item.media_type }}">
+        {% if item.media_type == 'image' %}
+        <button type="button" class="lightbox-trigger" data-lightbox-src="{{ item.file_url }}" data-lightbox-alt="{{ item.title }}" aria-label="View full size image: {{ item.title }}">
+          <img src="{{ item.file_url }}" alt="{{ item.title }}">
+        </button>
+        {% elif item.media_type == 'video' %}
+        <video controls preload="metadata" playsinline {% if item.thumbnail %}poster="{{ item.thumbnail_url }}"{% endif %} aria-label="Video player: {{ item.title }}">
+          <source src="{{ item.file_url }}" type="{{ item.mime_type }}">
+          Your browser cannot play this video. <a href="{{ item.file_url }}" download>Download the file</a> instead.
+        </video>
+        {% else %}
+        <div class="audio-wrap">
+          {% if item.card_image_url %}<img class="audio-art" src="{{ item.card_image_url }}" alt="">{% else %}<span class="audio-art placeholder placeholder-audio" aria-hidden="true">&#9835;</span>{% endif %}
+          <audio controls preload="metadata" aria-label="Audio player: {{ item.title }}">
+            <source src="{{ item.file_url }}" type="{{ item.mime_type }}">
+            Your browser cannot play this audio. <a href="{{ item.file_url }}" download>Download the file</a> instead.
+          </audio>
+        </div>
+        {% endif %}
+      </div>
+
+      <h1>{{ item.title }}</h1>
+      {% if item.artist %}<p class="lead muted">by {{ item.artist }}</p>{% endif %}
+      {% if item.description %}<div class="description">{{ item.description|linebreaks }}</div>{% endif %}
+
+      <section id="comments" class="comments" aria-labelledby="comments-heading">
+        <h2 id="comments-heading">Comments ({{ comments|length }})</h2>
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'media_library:comment_add' item.slug %}" class="comment-form" data-loading-text="Posting…">
+          {% csrf_token %}
+          {% include "media_library/_form_fields.html" with form=comment_form %}
+          <button type="submit" class="btn btn-primary">Post comment</button>
+        </form>
+        {% else %}
+        <p class="muted"><a href="{% url 'media_library:login' %}?next={{ request.path|urlencode }}">Log in</a> to join the conversation.</p>
+        {% endif %}
+
+        <ul class="comment-list">
+          {% for comment in comments %}
+          <li class="comment">
+            <div class="comment-head">
+              <strong>{{ comment.user.username }}</strong>
+              <span class="muted small">{{ comment.created_at|date:"M j, Y H:i" }}</span>
+            </div>
+            <p>{{ comment.text|linebreaksbr }}</p>
+            {% if user.is_authenticated %}
+            <div class="comment-actions">
+              {% if comment.user_id == user.id %}
+              <a class="small" href="{% url 'media_library:comment_edit' comment.pk %}">Edit</a>
+              {% endif %}
+              {% if comment.user_id == user.id or user.is_staff %}
+              <form method="post" action="{% url 'media_library:comment_delete' comment.pk %}" class="inline-form" data-confirm="Delete this comment?">
+                {% csrf_token %}
+                <button type="submit" class="link-button small">Delete</button>
+              </form>
+              {% endif %}
+            </div>
+            {% endif %}
+          </li>
+          {% empty %}
+          <li class="muted">No comments yet.</li>
+          {% endfor %}
+        </ul>
+      </section>
+    </div>
+
+    <aside class="detail-side" aria-label="Media information">
+      <div class="panel">
+        <div class="panel-actions">
+          {% include "media_library/_favorite_button.html" %}
+          <a class="btn btn-small" href="{{ item.file_url }}" download>Download</a>
+        </div>
+        <dl class="meta-list">
+          <div><dt>Type</dt><dd>{{ item.get_media_type_display }}</dd></div>
+          {% if item.category %}<div><dt>Category</dt><dd><a href="{{ item.category.get_absolute_url }}">{{ item.category.name }}</a></dd></div>{% endif %}
+          <div><dt>Uploaded by</dt><dd>{{ item.uploader.username }}</dd></div>
+          <div><dt>Uploaded</dt><dd>{{ item.created_at|date:"M j, Y" }}</dd></div>
+          <div><dt>Views</dt><dd>{{ item.view_count }}</dd></div>
+          <div><dt>Visibility</dt><dd>{{ item.get_visibility_display }}</dd></div>
+        </dl>
+        {% if can_manage %}
+        <div class="panel-actions">
+          <a class="btn btn-small" href="{% url 'media_library:edit_media' item.slug %}">Edit</a>
+          <a class="btn btn-small btn-danger" href="{% url 'media_library:delete_media' item.slug %}">Delete</a>
+        </div>
+        {% endif %}
+      </div>
+    </aside>
+  </div>
+
+  {% if related %}
+  <section class="section" aria-labelledby="related-heading">
+    <div class="section-head"><h2 id="related-heading">More like this</h2></div>
+    <div class="grid media-grid">
+      {% for item in related %}{% include "media_library/_media_card.html" %}{% endfor %}
+    </div>
+  </section>
+  {% endif %}
+</article>
+
+{% if item.media_type == 'image' %}
+<dialog id="lightbox" class="lightbox" aria-label="Image viewer">
+  <form method="dialog"><button class="lightbox-close" aria-label="Close image viewer">&times;</button></form>
+  <img src="" alt="">
+</dialog>
+{% endif %}
+{% endblock %}

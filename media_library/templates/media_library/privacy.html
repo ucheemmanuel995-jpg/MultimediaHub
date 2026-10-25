@@ -1,0 +1,25 @@
+{% extends "media_library/base.html" %}
+{% block title %}Privacy policy{% endblock %}
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <h1>Privacy policy</h1>
+    <p class="lead muted">Starter text: have this reviewed before public production use.</p>
+  </div>
+</section>
+<section class="container section-tight prose">
+  <div class="notice" role="note">
+    <strong>Review required.</strong> This is a starter policy written for development. It is not legal advice and must be reviewed and adapted by a qualified professional before MultimediaHub is used publicly.
+  </div>
+  <h2>Information we collect</h2>
+  <p>When you register we store your username, email address and a securely hashed password. When you upload media we store the files, titles, descriptions and visibility settings you provide. Messages sent through the contact form are stored so our team can review them.</p>
+  <h2>How we use it</h2>
+  <p>We use this information to operate the site: authenticating you, showing your uploads, delivering media according to its visibility, and responding to messages.</p>
+  <h2>Private media</h2>
+  <p>Media marked private is only delivered to its owner and site administrators.</p>
+  <h2>Cookies</h2>
+  <p>We use essential cookies for sign-in sessions and security (CSRF protection). We do not use advertising cookies.</p>
+  <h2>Your choices</h2>
+  <p>You can edit your profile, delete your uploads and comments at any time. To request account deletion, <a href="{% url 'media_library:contact' %}">contact us</a>.</p>
+</section>
+{% endblock %}

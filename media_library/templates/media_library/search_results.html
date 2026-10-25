@@ -1,0 +1,21 @@
+{% extends "media_library/base.html" %}
+{% block title %}Search{% endblock %}
+{% block content %}
+{% if searched or has_filters %}
+{% include "media_library/_library_body.html" %}
+{% else %}
+<section class="page-header">
+  <div class="container">
+    <h1>Search</h1>
+    <p class="lead muted">Search titles, descriptions, creators and categories.</p>
+  </div>
+</section>
+<section class="container section-tight">
+  {% include "media_library/_filters.html" %}
+  <div class="empty-state">
+    <h2>What are you looking for?</h2>
+    <p class="muted">Enter a keyword above to search all public media.</p>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

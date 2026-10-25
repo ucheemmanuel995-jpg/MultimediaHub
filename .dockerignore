@@ -1,0 +1,11 @@
+.env
+.env.*
+!.env.production.example
+.git
+.venv
+venv
+__pycache__
+*.py[cod]
+db.sqlite3
+staticfiles
+uploads

@@ -1,0 +1,38 @@
+<section class="page-header">
+  <div class="container">
+    <h1>{{ title }}</h1>
+    {% if subtitle %}<p class="lead muted">{{ subtitle }}</p>{% endif %}
+  </div>
+</section>
+
+<section class="container section-tight">
+  {% include "media_library/_filters.html" %}
+
+  <p class="result-count muted" aria-live="polite">
+    {{ page_obj.paginator.count }} result{{ page_obj.paginator.count|pluralize }}
+  </p>
+
+  {% if page_obj.object_list %}
+  <div class="grid media-grid">
+    {% for item in page_obj.object_list %}
+      {% include "media_library/_media_card.html" %}
+    {% endfor %}
+  </div>
+  {% include "media_library/_pagination.html" %}
+  {% else %}
+  <div class="empty-state">
+    <h2>Nothing to show yet</h2>
+    {% if has_filters %}
+    <p class="muted">No media matches your search or filters. Try different keywords or clear the filters.</p>
+    <a class="btn" href="{{ request.path }}">Clear filters</a>
+    {% else %}
+    <p class="muted">No public media has been shared here yet.</p>
+    {% if user.is_authenticated %}
+    <a class="btn btn-primary" href="{% url 'media_library:upload' %}">Upload the first item</a>
+    {% else %}
+    <a class="btn btn-primary" href="{% url 'media_library:register' %}">Join to upload</a>
+    {% endif %}
+    {% endif %}
+  </div>
+  {% endif %}
+</section>

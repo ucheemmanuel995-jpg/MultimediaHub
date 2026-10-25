@@ -1,0 +1,15 @@
+{% extends "media_library/base.html" %}
+{% block title %}Delete {{ item.title }}{% endblock %}
+{% block content %}
+<section class="container auth-wrap">
+  <div class="auth-card">
+    <h1>Delete this media?</h1>
+    <p>You are about to permanently delete <strong>{{ item.title }}</strong> ({{ item.get_media_type_display|lower }}). The stored file will be removed and this cannot be undone.</p>
+    <form method="post" class="form-actions" data-loading-text="Deleting…">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Yes, delete permanently</button>
+      <a class="btn" href="{% url 'media_library:my_media' %}">Cancel</a>
+    </form>
+  </div>
+</section>
+{% endblock %}

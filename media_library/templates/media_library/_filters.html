@@ -1,0 +1,50 @@
+<form class="filter-bar" method="get" action="{{ request.path }}" role="search" aria-label="Filter results">
+  <div class="field">
+    <label for="f-q">Search</label>
+    <input id="f-q" type="search" name="q" value="{{ filters.q }}" maxlength="100" placeholder="Title, description or category">
+  </div>
+  {% if not fixed_type %}
+  <div class="field">
+    <label for="f-type">Type</label>
+    <select id="f-type" name="type">
+      <option value="">All types</option>
+      <option value="image" {% if filters.type == 'image' %}selected{% endif %}>Images</option>
+      <option value="video" {% if filters.type == 'video' %}selected{% endif %}>Videos</option>
+      <option value="audio" {% if filters.type == 'audio' %}selected{% endif %}>Audio</option>
+    </select>
+  </div>
+  {% endif %}
+  {% if not category %}
+  <div class="field">
+    <label for="f-category">Category</label>
+    <select id="f-category" name="category">
+      <option value="">All categories</option>
+      {% for cat in categories %}
+      <option value="{{ cat.slug }}" {% if filters.category == cat.slug %}selected{% endif %}>{{ cat.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  {% endif %}
+  {% if show_visibility_filter %}
+  <div class="field">
+    <label for="f-visibility">Visibility</label>
+    <select id="f-visibility" name="visibility">
+      <option value="">Public &amp; private</option>
+      <option value="public" {% if filters.visibility == 'public' %}selected{% endif %}>Public</option>
+      <option value="private" {% if filters.visibility == 'private' %}selected{% endif %}>Private</option>
+    </select>
+  </div>
+  {% endif %}
+  <div class="field">
+    <label for="f-sort">Sort by</label>
+    <select id="f-sort" name="sort">
+      {% for value, label in sort_choices %}
+      <option value="{{ value }}" {% if filters.sort == value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="field field-actions">
+    <button type="submit" class="btn btn-primary">Apply</button>
+    {% if has_filters %}<a class="btn" href="{{ request.path }}">Clear</a>{% endif %}
+  </div>
+</form>

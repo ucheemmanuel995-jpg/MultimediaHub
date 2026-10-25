@@ -1,0 +1,18 @@
+{% extends "media_library/base.html" %}
+{% block title %}Edit comment{% endblock %}
+{% block content %}
+<section class="container auth-wrap">
+  <div class="auth-card">
+    <h1>Edit comment</h1>
+    <p class="muted">On <a href="{{ comment.media.get_absolute_url }}">{{ comment.media.title }}</a></p>
+    <form method="post" class="form" data-loading-text="Saving…" novalidate>
+      {% csrf_token %}
+      {% include "media_library/_form_fields.html" %}
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a class="btn" href="{{ comment.media.get_absolute_url }}#comments">Cancel</a>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

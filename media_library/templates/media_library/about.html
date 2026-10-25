@@ -1,0 +1,22 @@
+{% extends "media_library/base.html" %}
+{% block title %}About{% endblock %}
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <h1>About MultimediaHub</h1>
+    <p class="lead muted">A home for images, video and audio.</p>
+  </div>
+</section>
+<section class="container section-tight prose">
+  <p>MultimediaHub lets people discover and share media. Browse public images, videos and audio, save your favorites, and join the conversation with comments.</p>
+  <h2>For creators</h2>
+  <p>Create a free account to upload your own files. Each upload can be public or private: private files are only ever delivered to you (and site administrators) after an authorisation check.</p>
+  <h2>For everyone</h2>
+  <ul>
+    <li>Search by title, description, creator or category.</li>
+    <li>Play videos and audio natively in your browser, with no plugins.</li>
+    <li>Keep a list of favorites and manage your uploads from your dashboard.</li>
+  </ul>
+  <p>Have questions? <a href="{% url 'media_library:contact' %}">Get in touch</a>.</p>
+</section>
+{% endblock %}

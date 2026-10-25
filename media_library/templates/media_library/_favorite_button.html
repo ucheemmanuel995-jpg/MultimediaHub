@@ -1,0 +1,19 @@
+{% if user.is_authenticated %}
+<form method="post" action="{% url 'media_library:favorite_toggle' item.slug %}" class="favorite-form" data-favorite-form>
+  {% csrf_token %}
+  <input type="hidden" name="next" value="{{ request.get_full_path }}">
+  {% if item.pk in favorite_ids %}
+  <button type="submit" class="btn btn-small btn-favorite is-active" aria-pressed="true" aria-label="Remove {{ item.title }} from favorites">
+    <span aria-hidden="true" class="fav-icon">&#9829;</span> <span class="fav-label">Saved</span>
+  </button>
+  {% else %}
+  <button type="submit" class="btn btn-small btn-favorite" aria-pressed="false" aria-label="Add {{ item.title }} to favorites">
+    <span aria-hidden="true" class="fav-icon">&#9825;</span> <span class="fav-label">Save</span>
+  </button>
+  {% endif %}
+</form>
+{% else %}
+<a class="btn btn-small btn-favorite" href="{% url 'media_library:login' %}?next={{ request.path|urlencode }}" aria-label="Log in to save {{ item.title }}">
+  <span aria-hidden="true" class="fav-icon">&#9825;</span> <span class="fav-label">Save</span>
+</a>
+{% endif %}

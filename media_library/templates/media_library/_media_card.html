@@ -1,0 +1,26 @@
+<article class="card media-card">
+  <a class="card-media card-media-{{ item.media_type }}" href="{{ item.get_absolute_url }}" aria-label="Open {{ item.title }}">
+    {% if item.card_image_url %}
+    <img src="{{ item.card_image_url }}" alt="" loading="lazy" width="480" height="320">
+    {% else %}
+    <span class="placeholder placeholder-{{ item.media_type }}" aria-hidden="true">
+      {% if item.media_type == 'video' %}&#9654;{% elif item.media_type == 'audio' %}&#9835;{% else %}&#9638;{% endif %}
+    </span>
+    {% endif %}
+    {% if item.media_type == 'video' and item.card_image_url %}<span class="play-overlay" aria-hidden="true">&#9654;</span>{% endif %}
+    <span class="badge badge-{{ item.media_type }}">{{ item.get_media_type_display }}</span>
+    {% if not item.is_public %}<span class="badge badge-private">Private</span>{% endif %}
+  </a>
+  <div class="card-body">
+    <h3 class="card-title"><a href="{{ item.get_absolute_url }}">{{ item.title }}</a></h3>
+    <p class="card-meta muted">
+      {% if item.artist %}{{ item.artist }} · {% endif %}
+      {% if item.category %}{{ item.category.name }} · {% endif %}
+      {{ item.created_at|date:"M j, Y" }}
+    </p>
+    <div class="card-actions">
+      <span class="muted small">{{ item.view_count }} view{{ item.view_count|pluralize }}</span>
+      {% include "media_library/_favorite_button.html" %}
+    </div>
+  </div>
+</article>

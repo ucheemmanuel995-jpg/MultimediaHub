@@ -1,0 +1,18 @@
+{% extends "media_library/base.html" %}
+{% block title %}Contact{% endblock %}
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <h1>Contact us</h1>
+    <p class="lead muted">Questions, feedback or reports? Send us a message.</p>
+  </div>
+</section>
+<section class="container section-tight form-page">
+  <form method="post" class="form panel" data-loading-text="Sending…" novalidate>
+    {% csrf_token %}
+    {% include "media_library/_form_fields.html" %}
+    <button type="submit" class="btn btn-primary">Send message</button>
+    <p class="help">Messages are saved for our team to review. We don't send an automatic email confirmation.</p>
+  </form>
+</section>
+{% endblock %}

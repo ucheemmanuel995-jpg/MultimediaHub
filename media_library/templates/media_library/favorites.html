@@ -1,0 +1,24 @@
+{% extends "media_library/base.html" %}
+{% block title %}Favorites{% endblock %}
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <h1>Your favorites</h1>
+    <p class="lead muted">Media you've saved.</p>
+  </div>
+</section>
+<section class="container section-tight">
+  {% if items %}
+  <div class="grid media-grid">
+    {% for item in items %}{% include "media_library/_media_card.html" %}{% endfor %}
+  </div>
+  {% include "media_library/_pagination.html" %}
+  {% else %}
+  <div class="empty-state">
+    <h2>No favorites yet</h2>
+    <p class="muted">Use the Save button on any media item to collect it here.</p>
+    <a class="btn btn-primary" href="{% url 'media_library:explore' %}">Explore media</a>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

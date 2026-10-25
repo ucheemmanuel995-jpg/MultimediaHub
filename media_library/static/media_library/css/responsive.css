@@ -1,0 +1,42 @@
+/* MultimediaHub — responsive behaviour */
+
+@media (max-width: 1000px) {
+  .detail-grid { grid-template-columns: 1fr; }
+  .profile-grid { grid-template-columns: 1fr; }
+  .nav-search input { width: 140px; }
+}
+
+@media (max-width: 860px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+
+  /* Without JavaScript the menu simply stays expanded and stacked. */
+  .nav-wrap { flex-wrap: wrap; padding-top: 0.5rem; padding-bottom: 0.5rem; }
+  .site-nav { flex-direction: column; align-items: stretch; width: 100%; gap: var(--space-3); padding-bottom: var(--space-3); }
+  .site-nav ul { flex-direction: column; align-items: flex-start; gap: var(--space-2); }
+  .nav-search input { width: 100%; }
+  .nav-search { width: 100%; }
+
+  /* With JavaScript the menu collapses behind the toggle button. */
+  .js .nav-toggle { display: block; }
+  .js .site-nav { display: none; }
+  .js .site-nav.is-open { display: flex; }
+  .js .nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .js .nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+  .js .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+}
+
+@media (max-width: 600px) {
+  .hero { padding: var(--space-5) 0; }
+  .media-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: var(--space-3); }
+  .footer-grid { grid-template-columns: 1fr; }
+  .table-row { flex-wrap: wrap; }
+  .row-actions { width: 100%; }
+  .auth-card { padding: var(--space-4) var(--space-3); }
+  .section-head { flex-direction: column; align-items: flex-start; gap: 0.2rem; }
+  .meta-list div { flex-direction: column; gap: 0; }
+  .meta-list dd { text-align: left; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}

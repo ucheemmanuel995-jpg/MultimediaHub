@@ -1,0 +1,113 @@
+{% extends "media_library/base.html" %}
+{% block title %}Discover, stream and share media{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="container hero-inner">
+    <p class="eyebrow">Images · Video · Audio</p>
+    <h1>Discover, stream and share the media you love.</h1>
+    <p class="lead">MultimediaHub is a home for photos, videos and music. Browse what the community shares, build your own collection, and keep private files private.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary btn-large" href="{% url 'media_library:explore' %}">Explore media</a>
+      {% if user.is_authenticated %}
+      <a class="btn btn-large" href="{% url 'media_library:upload' %}">Upload yours</a>
+      {% else %}
+      <a class="btn btn-large" href="{% url 'media_library:register' %}">Create a free account</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% if featured %}
+<section class="container section">
+  <div class="section-head">
+    <h2>Featured</h2>
+    <a href="{% url 'media_library:explore' %}">See all</a>
+  </div>
+  <div class="grid media-grid">
+    {% for item in featured %}{% include "media_library/_media_card.html" %}{% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="container section">
+  <div class="section-head"><h2>Browse by type</h2></div>
+  <div class="grid type-grid">
+    <a class="type-card type-image" href="{% url 'media_library:gallery' %}">
+      <span class="type-icon" aria-hidden="true">&#9638;</span>
+      <h3>Images</h3>
+      <p class="muted">Photos, artwork and graphics.</p>
+    </a>
+    <a class="type-card type-video" href="{% url 'media_library:video_library' %}">
+      <span class="type-icon" aria-hidden="true">&#9654;</span>
+      <h3>Videos</h3>
+      <p class="muted">Stream clips and films in your browser.</p>
+    </a>
+    <a class="type-card type-audio" href="{% url 'media_library:audio_library' %}">
+      <span class="type-icon" aria-hidden="true">&#9835;</span>
+      <h3>Audio</h3>
+      <p class="muted">Music, podcasts and sound clips.</p>
+    </a>
+  </div>
+</section>
+
+{% if categories %}
+<section class="container section">
+  <div class="section-head">
+    <h2>Categories</h2>
+    <a href="{% url 'media_library:categories' %}">All categories</a>
+  </div>
+  <div class="grid category-grid">
+    {% for category in categories %}
+    <a class="category-card" href="{{ category.get_absolute_url }}">
+      <h3>{{ category.name }}</h3>
+      <p class="muted">{{ category.media_count }} item{{ category.media_count|pluralize }}</p>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="container section">
+  <div class="section-head">
+    <h2>Recently uploaded</h2>
+    {% if has_any_media %}<a href="{% url 'media_library:explore' %}">Browse all</a>{% endif %}
+  </div>
+  {% if recent %}
+  <div class="grid media-grid">
+    {% for item in recent %}{% include "media_library/_media_card.html" %}{% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <h3>No media has been shared yet</h3>
+    <p class="muted">Be the first to add something to the library.</p>
+    {% if user.is_authenticated %}
+    <a class="btn btn-primary" href="{% url 'media_library:upload' %}">Upload media</a>
+    {% else %}
+    <a class="btn btn-primary" href="{% url 'media_library:register' %}">Register to upload</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</section>
+
+{% if popular %}
+<section class="container section">
+  <div class="section-head"><h2>Popular</h2></div>
+  <div class="grid media-grid">
+    {% for item in popular %}{% include "media_library/_media_card.html" %}{% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="container section">
+  <div class="cta">
+    <h2>Have something to share?</h2>
+    <p>Upload images, videos and audio. Keep them public or private, and organise them in your personal dashboard.</p>
+    {% if user.is_authenticated %}
+    <a class="btn btn-primary btn-large" href="{% url 'media_library:upload' %}">Upload media</a>
+    {% else %}
+    <a class="btn btn-primary btn-large" href="{% url 'media_library:register' %}">Get started</a>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "media_library/base.html" %}
+{% block title %}My media{% endblock %}
+{% block content %}
+<section class="page-header">
+  <div class="container header-row">
+    <div>
+      <h1>My media</h1>
+      <p class="lead muted">Search, filter and manage everything you've uploaded.</p>
+    </div>
+    <a class="btn btn-primary" href="{% url 'media_library:upload' %}">+ Upload media</a>
+  </div>
+</section>
+
+<section class="container section-tight">
+  {% include "media_library/_filters.html" with show_visibility_filter=True %}
+  <p class="result-count muted" aria-live="polite">{{ page_obj.paginator.count }} item{{ page_obj.paginator.count|pluralize }}</p>
+
+  {% if page_obj.object_list %}
+  <ul class="table-list">
+    {% for item in page_obj.object_list %}
+    <li class="table-row">
+      <div class="row-thumb">
+        {% if item.card_image_url %}<img src="{{ item.card_image_url }}" alt="" loading="lazy" width="96" height="64">
+        {% else %}<span class="placeholder placeholder-{{ item.media_type }} placeholder-small" aria-hidden="true">{% if item.media_type == 'video' %}&#9654;{% elif item.media_type == 'audio' %}&#9835;{% else %}&#9638;{% endif %}</span>{% endif %}
+      </div>
+      <div class="row-main">
+        <strong>{% if item.is_active %}<a href="{{ item.get_absolute_url }}">{{ item.title }}</a>{% else %}{{ item.title }}{% endif %}</strong>
+        <span class="muted small">
+          <span class="badge badge-{{ item.media_type }} badge-inline">{{ item.get_media_type_display }}</span>
+          <span class="badge {% if item.is_public %}badge-public{% else %}badge-private{% endif %} badge-inline">{{ item.get_visibility_display }}</span>
+          {% if not item.is_active %}<span class="badge badge-inactive badge-inline">Inactive</span>{% endif %}
+          {{ item.created_at|date:"M j, Y" }} · {{ item.view_count }} view{{ item.view_count|pluralize }}
+        </span>
+      </div>
+      <div class="row-actions">
+        <a class="btn btn-small" href="{% url 'media_library:edit_media' item.slug %}">Edit</a>
+        <a class="btn btn-small btn-danger" href="{% url 'media_library:delete_media' item.slug %}">Delete</a>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% include "media_library/_pagination.html" %}
+  {% else %}
+  <div class="empty-state">
+    {% if has_filters %}
+    <h2>No matching media</h2>
+    <p class="muted">Nothing matches your filters.</p>
+    <a class="btn" href="{% url 'media_library:my_media' %}">Clear filters</a>
+    {% else %}
+    <h2>You haven't uploaded anything yet</h2>
+    <a class="btn btn-primary" href="{% url 'media_library:upload' %}">Upload media</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

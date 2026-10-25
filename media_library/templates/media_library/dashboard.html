@@ -1,0 +1,69 @@
+{% extends "media_library/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<section class="page-header">
+  <div class="container header-row">
+    <div>
+      <h1>Dashboard</h1>
+      <p class="lead muted">Hello, {{ user.username }}. Here's your library at a glance.</p>
+    </div>
+    <a class="btn btn-primary btn-large" href="{% url 'media_library:upload' %}">+ Upload media</a>
+  </div>
+</section>
+
+<div class="container section-tight">
+  <div class="grid stats-grid" role="list" aria-label="Your statistics">
+    <div class="stat" role="listitem"><span class="stat-value">{{ stats.total }}</span><span class="stat-label">Total uploads</span></div>
+    <div class="stat" role="listitem"><span class="stat-value">{{ stats.images }}</span><span class="stat-label">Images</span></div>
+    <div class="stat" role="listitem"><span class="stat-value">{{ stats.videos }}</span><span class="stat-label">Videos</span></div>
+    <div class="stat" role="listitem"><span class="stat-value">{{ stats.audio }}</span><span class="stat-label">Audio</span></div>
+    <div class="stat" role="listitem"><span class="stat-value">{{ stats.public }}</span><span class="stat-label">Public</span></div>
+    <div class="stat" role="listitem"><span class="stat-value">{{ stats.private }}</span><span class="stat-label">Private</span></div>
+  </div>
+
+  <section class="section" aria-labelledby="recent-uploads">
+    <div class="section-head">
+      <h2 id="recent-uploads">Recent uploads</h2>
+      <a href="{% url 'media_library:my_media' %}">Manage all</a>
+    </div>
+    {% if recent %}
+    <ul class="table-list">
+      {% for item in recent %}
+      <li class="table-row">
+        <div class="row-main">
+          <strong>{{ item.title }}</strong>
+          <span class="muted small">{{ item.get_media_type_display }} · {{ item.get_visibility_display }} · {{ item.created_at|date:"M j, Y" }}{% if not item.is_active %} · Inactive{% endif %}</span>
+        </div>
+        <div class="row-actions">
+          {% if item.is_active %}<a class="btn btn-small" href="{{ item.get_absolute_url }}">View</a>{% endif %}
+          <a class="btn btn-small" href="{% url 'media_library:edit_media' item.slug %}">Edit</a>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div class="empty-state">
+      <h3>No uploads yet</h3>
+      <p class="muted">Upload your first image, video or audio file.</p>
+      <a class="btn btn-primary" href="{% url 'media_library:upload' %}">Upload media</a>
+    </div>
+    {% endif %}
+  </section>
+
+  <section class="section" aria-labelledby="fav-heading">
+    <div class="section-head">
+      <h2 id="fav-heading">Favorites ({{ favorite_total }})</h2>
+      {% if favorite_total %}<a href="{% url 'media_library:favorites' %}">See all</a>{% endif %}
+    </div>
+    {% if favorite_items %}
+    <div class="grid media-grid">
+      {% for item in favorite_items %}{% include "media_library/_media_card.html" %}{% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <p class="muted">You haven't saved any favorites yet. <a href="{% url 'media_library:explore' %}">Explore media</a>.</p>
+    </div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

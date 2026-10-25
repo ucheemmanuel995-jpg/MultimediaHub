@@ -1,0 +1,28 @@
+{% extends "media_library/base.html" %}
+{% block title %}Categories{% endblock %}
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <h1>Categories</h1>
+    <p class="lead muted">Browse public media by topic.</p>
+  </div>
+</section>
+<section class="container section-tight">
+  {% if categories %}
+  <div class="grid category-grid">
+    {% for category in categories %}
+    <a class="category-card" href="{{ category.get_absolute_url }}">
+      <h2>{{ category.name }}</h2>
+      {% if category.description %}<p class="muted">{{ category.description|truncatechars:90 }}</p>{% endif %}
+      <p class="small muted">{{ category.media_count }} item{{ category.media_count|pluralize }}</p>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <h2>No categories yet</h2>
+    <p class="muted">Categories are created by site administrators in Django Admin.</p>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

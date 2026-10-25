@@ -1,0 +1,17 @@
+{% extends "media_library/base.html" %}
+{% block title %}Log in{% endblock %}
+{% block content %}
+<section class="container auth-wrap">
+  <div class="auth-card">
+    <h1>Welcome back</h1>
+    <p class="muted">Log in to upload and manage your media.</p>
+    <form method="post" class="form" data-loading-text="Signing in…" novalidate>
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next }}">
+      {% include "media_library/_form_fields.html" %}
+      <button type="submit" class="btn btn-primary btn-block">Log in</button>
+    </form>
+    <p class="muted small">No account yet? <a href="{% url 'media_library:register' %}">Create one</a>.</p>
+  </div>
+</section>
+{% endblock %}

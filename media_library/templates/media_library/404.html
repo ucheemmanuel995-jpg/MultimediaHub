@@ -1,0 +1,15 @@
+{% extends "media_library/base.html" %}
+{% block title %}Page not found{% endblock %}
+{% block content %}
+<section class="container auth-wrap">
+  <div class="auth-card center">
+    <p class="eyebrow">Error 404</p>
+    <h1>We couldn't find that page</h1>
+    <p class="muted">The page or media you're looking for doesn't exist, was removed, or isn't available to you.</p>
+    <div class="form-actions center-actions">
+      <a class="btn btn-primary" href="{% url 'media_library:home' %}">Go home</a>
+      <a class="btn" href="{% url 'media_library:explore' %}">Explore media</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

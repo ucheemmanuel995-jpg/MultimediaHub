@@ -1,0 +1,120 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}MultimediaHub{% endblock %} · MultimediaHub</title>
+  <meta name="description" content="{% block meta_description %}Discover, stream and share images, videos and audio on MultimediaHub.{% endblock %}">
+  <meta name="color-scheme" content="dark">
+  <script>document.documentElement.classList.add('js');</script>
+  <link rel="stylesheet" href="{% static 'media_library/css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'media_library/css/components.css' %}">
+  <link rel="stylesheet" href="{% static 'media_library/css/responsive.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="logo" href="{% url 'media_library:home' %}" aria-label="MultimediaHub home">
+        <span class="logo-mark" aria-hidden="true"></span>
+        <span class="logo-text">Multimedia<strong>Hub</strong></span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle navigation menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav id="site-nav" class="site-nav" aria-label="Main navigation">
+        {% with current=request.resolver_match.url_name %}
+        <ul class="nav-links">
+          <li><a href="{% url 'media_library:home' %}" {% if current == 'home' %}aria-current="page"{% endif %}>Home</a></li>
+          <li><a href="{% url 'media_library:explore' %}" {% if current == 'explore' %}aria-current="page"{% endif %}>Explore</a></li>
+          <li><a href="{% url 'media_library:gallery' %}" {% if current == 'gallery' %}aria-current="page"{% endif %}>Images</a></li>
+          <li><a href="{% url 'media_library:video_library' %}" {% if current == 'video_library' %}aria-current="page"{% endif %}>Videos</a></li>
+          <li><a href="{% url 'media_library:audio_library' %}" {% if current == 'audio_library' %}aria-current="page"{% endif %}>Audio</a></li>
+          <li><a href="{% url 'media_library:categories' %}" {% if current == 'categories' or current == 'category_detail' %}aria-current="page"{% endif %}>Categories</a></li>
+        </ul>
+
+        <form class="nav-search" role="search" action="{% url 'media_library:search' %}" method="get">
+          <label class="sr-only" for="nav-q">Search media</label>
+          <input id="nav-q" name="q" type="search" placeholder="Search media…" maxlength="100" value="{{ request.GET.q }}">
+          <button type="submit" class="btn btn-small">Search</button>
+        </form>
+
+        <ul class="nav-account">
+          {% if user.is_authenticated %}
+          <li><a class="btn btn-small btn-primary" href="{% url 'media_library:upload' %}">Upload</a></li>
+          <li><a href="{% url 'media_library:dashboard' %}" {% if current == 'dashboard' or current == 'my_media' %}aria-current="page"{% endif %}>Dashboard</a></li>
+          <li><a href="{% url 'media_library:favorites' %}" {% if current == 'favorites' %}aria-current="page"{% endif %}>Favorites</a></li>
+          <li><a href="{% url 'media_library:profile' %}" {% if current == 'profile' %}aria-current="page"{% endif %}>Profile</a></li>
+          {% if user.is_staff %}<li><a href="{% url 'admin:index' %}">Admin</a></li>{% endif %}
+          <li>
+            <form method="post" action="{% url 'media_library:logout' %}" class="inline-form">
+              {% csrf_token %}
+              <button type="submit" class="link-button">Log out</button>
+            </form>
+          </li>
+          {% else %}
+          <li><a href="{% url 'media_library:login' %}" {% if current == 'login' %}aria-current="page"{% endif %}>Log in</a></li>
+          <li><a class="btn btn-small btn-primary" href="{% url 'media_library:register' %}">Register</a></li>
+          {% endif %}
+        </ul>
+        {% endwith %}
+      </nav>
+    </div>
+  </header>
+
+  {% if messages %}
+  <div class="container messages" role="region" aria-label="Notifications">
+    {% for message in messages %}
+    <div class="message message-{{ message.tags }}" role="{% if message.tags == 'error' %}alert{% else %}status{% endif %}">
+      <span>{{ message }}</span>
+      <button type="button" class="message-close" aria-label="Dismiss message">&times;</button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <main id="main" class="site-main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <a class="logo" href="{% url 'media_library:home' %}">
+          <span class="logo-mark" aria-hidden="true"></span>
+          <span class="logo-text">Multimedia<strong>Hub</strong></span>
+        </a>
+        <p class="muted">Discover, stream and share images, videos and audio.</p>
+      </div>
+      <nav aria-label="Browse">
+        <h2 class="footer-heading">Browse</h2>
+        <ul>
+          <li><a href="{% url 'media_library:gallery' %}">Images</a></li>
+          <li><a href="{% url 'media_library:video_library' %}">Videos</a></li>
+          <li><a href="{% url 'media_library:audio_library' %}">Audio</a></li>
+          <li><a href="{% url 'media_library:categories' %}">Categories</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Company">
+        <h2 class="footer-heading">About</h2>
+        <ul>
+          <li><a href="{% url 'media_library:about' %}">About</a></li>
+          <li><a href="{% url 'media_library:contact' %}">Contact</a></li>
+          <li><a href="{% url 'media_library:privacy' %}">Privacy</a></li>
+          <li><a href="{% url 'media_library:terms' %}">Terms</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="container footer-bottom">
+      <small>&copy; {% now "Y" %} MultimediaHub. All rights reserved.</small>
+    </div>
+  </footer>
+
+  <script src="{% static 'media_library/js/main.js' %}" defer></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>
